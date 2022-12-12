@@ -17,6 +17,12 @@ func ping(context *gin.Context) {
 	})
 }
 
+func notFound(context *gin.Context) {
+	context.JSON(404, gin.H{
+		"message": "❌ Page not found ❌",
+	})
+}
+
 // The global database connection
 var Database *sql.DB
 
@@ -51,6 +57,7 @@ func main() {
 
 	// Create the gin engine
 	engine := gin.Default()
+	engine.NoRoute(notFound)
 	engine.GET("/ping", ping)
 	engine.Run()
 }
