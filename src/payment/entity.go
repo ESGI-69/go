@@ -1,10 +1,18 @@
 package payment
 
-import "time"
+import (
+	"time"
+)
 
 type Payment struct {
-	ID        int
-	pricePaid float64
-	createdAt time.Time
-	updatedAt time.Time
+	ID        int `gorm:"primaryKey"`
+	ProductId int
+	Product   Product `gorm:"foreignKey:ProductId"`
+	PricePaid float64
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type Product struct {
+	ID int `gorm:"primaryKey"`
 }
