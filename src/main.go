@@ -22,18 +22,16 @@ func ping(context *gin.Context) {
 	})
 }
 
-// home page
-func home(context *gin.Context) {
-	context.JSON(200, gin.H{
-		"message": "🏠 Home 🏠",
-	})
-}
-
 // 404 custom
 func notFound(context *gin.Context) {
 	context.JSON(404, gin.H{
 		"message": "❌ Page not found ❌",
 	})
+}
+
+// home page with index.html
+func home(context *gin.Context) {
+	context.HTML(http.StatusOK, "index.html", nil)
 }
 
 func main() {
@@ -54,12 +52,17 @@ func main() {
 
 	// Create the gin engine
 	engine := gin.Default()
+	engine.LoadHTMLFiles("src/index.html")
+
+	// Create the api
 	api := engine.Group("/api")
 
+	// Routes
 	engine.NoRoute(notFound)
 	engine.GET("/ping", ping)
 	engine.GET("/", home)
 
+	// API Routes
 	api.GET("/payment", paymentHandler.Test)
 
 	engine.Run()
