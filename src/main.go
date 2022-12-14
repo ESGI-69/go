@@ -36,10 +36,12 @@ func home(context *gin.Context) {
 
 func main() {
 	// Connection DB
-	dbURL := os.Getenv("DB_URL")
+	dbURL := os.Getenv("DB_USER") + ":" + os.Getenv("DB_PASSWORD") + "@tcp(" + os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT") + ")/" + os.Getenv("DB_NAME") + "?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dbURL), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err.Error())
+	} else {
+		fmt.Println("🔗 Connection to DB OK")
 	}
 
 	//migration payment
