@@ -10,6 +10,6 @@ type Payment struct {
 	ProductId int
 	Product   product.Product `gorm:"foreignKey:ProductId"`
 	PricePaid float64
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `gorm:"autoCreateTime"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime"`
 }

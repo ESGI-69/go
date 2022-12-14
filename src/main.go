@@ -8,6 +8,7 @@ import (
 
 	"go/src/handler"
 	"go/src/payment"
+	"go/src/product"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
@@ -45,7 +46,7 @@ func main() {
 	}
 
 	//migration payment
-	db.AutoMigrate(&payment.Payment{})
+	db.AutoMigrate(&payment.Payment{}, &product.Product{})
 
 	//Payment
 	paymentRepository := payment.NewRepository(db)
