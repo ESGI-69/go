@@ -13,7 +13,6 @@ services:
       - DB_USER=test
       - DB_PASSWORD=test
       - DB_NAME=go-project
-      - DB_URL=test:test@tcp(database:3306)/go-project?charset=utf8mb4&parseTime=True&loc=Local
     depends_on:
       - database
   database:
