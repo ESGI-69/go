@@ -1,15 +1,20 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
+	"go/src/handler"
+	"go/src/payment"
+
 	"github.com/gin-gonic/gin"
-	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
+// routes
 func ping(context *gin.Context) {
 	fmt.Println("GET /")
 	context.JSON(http.StatusOK, gin.H{
@@ -17,47 +22,45 @@ func ping(context *gin.Context) {
 	})
 }
 
+// home page
+func home(context *gin.Context) {
+	context.JSON(200, gin.H{
+		"message": "🏠 Home 🏠",
+	})
+}
+
+// 404 custom
 func notFound(context *gin.Context) {
 	context.JSON(404, gin.H{
 		"message": "❌ Page not found ❌",
 	})
 }
 
-// The global database connection
-var Database *sql.DB
-
 func main() {
-	// Connect to the database
-	var databaseError error
-	Database, databaseError = sql.Open(
-		"mysql",
-		os.Getenv("DB_USER")+
-			":"+
-			os.Getenv("DB_PASSWORD")+
-			"@tcp("+
-			os.Getenv("DB_HOST")+
-			":"+
-			os.Getenv("DB_PORT")+
-			")/"+
-			os.Getenv("DB_NAME"),
-	)
-	if databaseError != nil {
-		fmt.Println(databaseError)
-		fmt.Println("❌ Database connection failed")
-		panic(databaseError.Error())
-	} else if Database.Ping() != nil {
-		fmt.Println(Database.Ping())
-		fmt.Println("❌ Database connection failed")
-		panic(databaseError.Error())
-	} else {
-		fmt.Println("✅ Database connection established")
+	// Connection DB
+	dbURL := os.Getenv("DB_URL")
+	db, err := gorm.Open(mysql.Open(dbURL), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err.Error())
 	}
-	// Close the database connection when the program ends
-	defer Database.Close()
+
+	//migration payment
+	db.AutoMigrate(&payment.Payment{})
+
+	//Payment
+	paymentRepository := payment.NewRepository(db)
+	paymentService := payment.NewService(paymentRepository)
+	paymentHandler := handler.NewPaymentHandler(paymentService)
 
 	// Create the gin engine
 	engine := gin.Default()
+	api := engine.Group("/api")
+
 	engine.NoRoute(notFound)
 	engine.GET("/ping", ping)
+	engine.GET("/", home)
+
+	api.GET("/payment", paymentHandler.Test)
+
 	engine.Run()
 }

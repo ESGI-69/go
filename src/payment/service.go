@@ -58,3 +58,5 @@ func (s *service) Delete(id int) error {
 	}
 	return nil
 }
+
+// TODO Stream

@@ -73,3 +73,5 @@ func (r *repository) Delete(id int) error {
 	}
 	return nil
 }
+
+// TODO Stream
