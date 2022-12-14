@@ -60,12 +60,17 @@ func main() {
 	// Create the api
 	api := engine.Group("/api")
 
-	// Routes
 	engine.NoRoute(notFound)
-	engine.GET("/ping", ping)
-	engine.GET("/", home)
 
-	// API Routes
+	productRepository := product.NewRepository(db)              // Create the product repository
+	productService := product.NewService(productRepository)     // Create the product service
+	productHandler := handler.NewProductHandler(productService) // Create the product handler
+	api.GET("/products", productHandler.GetAll)                 // Get all products
+	api.GET("/products/:id", productHandler.GetByID)            // Get product by ID
+	api.POST("/products", productHandler.Create)                // Create a product
+	api.PATCH("/products/:id", productHandler.Update)           // Update a product
+	api.DELETE("/products/:id", productHandler.Delete)          // Delete a product
+
 	api.POST("/payment", paymentHandler.Create)
 	api.GET("/payment", paymentHandler.GetAll)
 	api.GET("/payment/:id", paymentHandler.GetById)
