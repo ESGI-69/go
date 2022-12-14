@@ -2,7 +2,7 @@ package handler
 
 // import local package payment in go/src/payment
 import (
-	"payment"
+	"go/src/payment"
 )
 
 type Response struct {
