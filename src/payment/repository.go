@@ -7,9 +7,9 @@ import (
 )
 
 type Repository interface {
-	Store(payment Payment) (Payment, error)
-	FetchAll() ([]Payment, error)
-	FetchById(id int) (Payment, error)
+	Create(payment Payment) (Payment, error)
+	GetAll() ([]Payment, error)
+	GetById(id int) (Payment, error)
 	Update(id int, inputPayment InputPayment) (Payment, error)
 	Delete(id int) error
 }
@@ -22,7 +22,7 @@ func NewRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) Store(payment Payment) (Payment, error) {
+func (r *repository) Create(payment Payment) (Payment, error) {
 	err := r.db.Create(&payment).Error
 	if err != nil {
 		return payment, err
@@ -30,7 +30,7 @@ func (r *repository) Store(payment Payment) (Payment, error) {
 	return payment, nil
 }
 
-func (r *repository) FetchAll() ([]Payment, error) {
+func (r *repository) GetAll() ([]Payment, error) {
 	var payments []Payment
 	err := r.db.Find(&payments).Error
 	if err != nil {
@@ -39,7 +39,7 @@ func (r *repository) FetchAll() ([]Payment, error) {
 	return payments, nil
 }
 
-func (r *repository) FetchById(id int) (Payment, error) {
+func (r *repository) GetById(id int) (Payment, error) {
 	var payment Payment
 	err := r.db.Where(&Payment{ID: id}).First(&payment).Error
 	if err != nil {
@@ -49,7 +49,7 @@ func (r *repository) FetchById(id int) (Payment, error) {
 }
 
 func (r *repository) Update(id int, inputPayment InputPayment) (Payment, error) {
-	payment, err := r.FetchById(id)
+	payment, err := r.GetById(id)
 	if err != nil {
 		return payment, err
 	}

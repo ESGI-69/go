@@ -1,9 +1,9 @@
 package payment
 
 type Service interface {
-	Store(input InputPayment) (Payment, error)
-	FetchAll() ([]Payment, error)
-	FetchById(id int) (Payment, error)
+	Create(input InputPayment) (Payment, error)
+	GetAll() ([]Payment, error)
+	GetById(id int) (Payment, error)
 	Update(id int, input InputPayment) (Payment, error)
 	Delete(id int) error
 }
@@ -16,27 +16,27 @@ func NewService(repository Repository) *service {
 	return &service{repository}
 }
 
-func (s *service) Store(input InputPayment) (Payment, error) {
+func (s *service) Create(input InputPayment) (Payment, error) {
 	var payment Payment
 	payment.ProductId = input.ProductId
 	payment.PricePaid = input.PricePaid
-	payment, err := s.repository.Store(payment)
+	payment, err := s.repository.Create(payment)
 	if err != nil {
 		return payment, err
 	}
 	return payment, nil
 }
 
-func (s *service) FetchAll() ([]Payment, error) {
-	payments, err := s.repository.FetchAll()
+func (s *service) GetAll() ([]Payment, error) {
+	payments, err := s.repository.GetAll()
 	if err != nil {
 		return payments, err
 	}
 	return payments, nil
 }
 
-func (s *service) FetchById(id int) (Payment, error) {
-	payment, err := s.repository.FetchById(id)
+func (s *service) GetById(id int) (Payment, error) {
+	payment, err := s.repository.GetById(id)
 	if err != nil {
 		return payment, err
 	}
