@@ -1,4 +1,4 @@
-module src/main.go
+module go
 
 go 1.19
 
