@@ -65,9 +65,11 @@ func main() {
 	engine.GET("/", home)
 
 	// API Routes
-	api.GET("/testpayment", paymentHandler.TestPayment)
 	api.POST("/payment", paymentHandler.Create)
 	api.GET("/payment", paymentHandler.GetAll)
+	api.GET("/payment/:id", paymentHandler.GetById)
+	api.PUT("/payment/:id", paymentHandler.Update)
+	api.DELETE("/payment/:id", paymentHandler.Delete)
 
 	engine.Run()
 }
