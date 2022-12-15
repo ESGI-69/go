@@ -68,7 +68,7 @@ func main() {
 	api.POST("/payment", paymentHandler.Create)
 	api.GET("/payment", paymentHandler.GetAll)
 	api.GET("/payment/:id", paymentHandler.GetById)
-	api.PUT("/payment/:id", paymentHandler.Update)
+	api.PATCH("/payment/:id", paymentHandler.Update)
 	api.DELETE("/payment/:id", paymentHandler.Delete)
 
 	engine.Run()
