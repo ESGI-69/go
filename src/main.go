@@ -40,20 +40,15 @@ func main() {
 	dbURL := os.Getenv("DB_USER") + ":" + os.Getenv("DB_PASSWORD") + "@tcp(" + os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT") + ")/" + os.Getenv("DB_NAME") + "?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dbURL), &gorm.Config{})
 	if err != nil {
+		fmt.Println("❌ Connection to DB failed")
+		fmt.Println(dbURL)
 		log.Fatal(err.Error())
 	} else {
 		fmt.Println("🔗 Connection to DB OK")
 	}
 
-	//migration payment
 	db.AutoMigrate(&payment.Payment{}, &product.Product{})
 
-	//Payment
-	paymentRepository := payment.NewRepository(db)
-	paymentService := payment.NewService(paymentRepository)
-	paymentHandler := handler.NewPaymentHandler(paymentService)
-
-	// Create the gin engine
 	engine := gin.Default()
 	engine.LoadHTMLFiles("src/index.html")
 
@@ -62,15 +57,18 @@ func main() {
 
 	engine.NoRoute(notFound)
 
-	productRepository := product.NewRepository(db)              // Create the product repository
-	productService := product.NewService(productRepository)     // Create the product service
-	productHandler := handler.NewProductHandler(productService) // Create the product handler
-	api.GET("/products", productHandler.GetAll)                 // Get all products
-	api.GET("/products/:id", productHandler.GetByID)            // Get product by ID
-	api.POST("/products", productHandler.Create)                // Create a product
-	api.PATCH("/products/:id", productHandler.Update)           // Update a product
-	api.DELETE("/products/:id", productHandler.Delete)          // Delete a product
+	productRepository := product.NewRepository(db)
+	productService := product.NewService(productRepository)
+	productHandler := handler.NewProductHandler(productService)
+	api.GET("/products", productHandler.GetAll)
+	api.GET("/products/:id", productHandler.GetByID)
+	api.POST("/products", productHandler.Create)
+	api.PATCH("/products/:id", productHandler.Update)
+	api.DELETE("/products/:id", productHandler.Delete)
 
+	paymentRepository := payment.NewRepository(db)
+	paymentService := payment.NewService(paymentRepository)
+	paymentHandler := handler.NewPaymentHandler(paymentService)
 	api.POST("/payment", paymentHandler.Create)
 	api.GET("/payment", paymentHandler.GetAll)
 	api.GET("/payment/:id", paymentHandler.GetById)
