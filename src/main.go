@@ -69,11 +69,11 @@ func main() {
 	paymentRepository := payment.NewRepository(db)
 	paymentService := payment.NewService(paymentRepository)
 	paymentHandler := handler.NewPaymentHandler(paymentService)
-	api.POST("/payment", paymentHandler.Create)
-	api.GET("/payment", paymentHandler.GetAll)
-	api.GET("/payment/:id", paymentHandler.GetById)
-	api.PATCH("/payment/:id", paymentHandler.Update)
-	api.DELETE("/payment/:id", paymentHandler.Delete)
+	api.POST("/payments", paymentHandler.Create)
+	api.GET("/payments", paymentHandler.GetAll)
+	api.GET("/payments/:id", paymentHandler.GetById)
+	api.PATCH("/payments/:id", paymentHandler.Update)
+	api.DELETE("/payments/:id", paymentHandler.Delete)
 
 	engine.Run()
 }
