@@ -15,24 +15,11 @@ import (
 	"gorm.io/gorm"
 )
 
-// routes
-func ping(context *gin.Context) {
-	fmt.Println("GET /")
-	context.JSON(http.StatusOK, gin.H{
-		"message": "pong",
-	})
-}
-
 // 404 custom
 func notFound(context *gin.Context) {
 	context.JSON(404, gin.H{
 		"message": "❌ Page not found ❌",
 	})
-}
-
-// home page with index.html
-func home(context *gin.Context) {
-	context.HTML(http.StatusOK, "index.html", nil)
 }
 
 func main() {
@@ -49,13 +36,14 @@ func main() {
 
 	db.AutoMigrate(&payment.Payment{}, &product.Product{})
 
-	engine := gin.Default()
-	engine.LoadHTMLFiles("src/index.html")
+	router := gin.Default()
+
+	router.LoadHTMLFiles("index.tmpl")
 
 	// Create the api
-	api := engine.Group("/api")
+	api := router.Group("/api")
 
-	engine.NoRoute(notFound)
+	router.NoRoute(notFound)
 
 	productRepository := product.NewRepository(db)
 	productService := product.NewService(productRepository)
@@ -75,5 +63,13 @@ func main() {
 	api.PATCH("/payments/:id", paymentHandler.Update)
 	api.DELETE("/payments/:id", paymentHandler.Delete)
 
-	engine.Run()
+	web := router.Group("/")
+
+	web.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.tmpl", gin.H{
+			"title": "Home Page",
+		})
+	})
+
+	router.Run()
 }
