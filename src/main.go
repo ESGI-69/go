@@ -38,7 +38,8 @@ func main() {
 
 	router := gin.Default()
 
-	router.LoadHTMLFiles("index.tmpl")
+	// https://gin-gonic.com/docs/examples/html-rendering/
+	router.LoadHTMLGlob("src/index.tmpl")
 
 	// Create the api
 	api := router.Group("/api")
