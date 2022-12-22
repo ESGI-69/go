@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid black;
+    }
+
+    a {
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    th,
+    td {
+      padding: 15px;
+    }
+  </style>
+  <title>Go - projet</title>
+</head>
+
+<body>
+  <h1>🏠 Home 🏠</h1>
+
+  <h2>📦 Products 📦</h2>
+
+  <a href="/products/create" >📝 Create a new product</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Created At</th>
+        <th>Updated At</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{ range $key, $value := .products }}
+      <tr id="product-{{ $value.ID }}">
+        <td>{{ $value.ID }}</td>
+        <td>{{ $value.Name }}</td>
+        <td>{{ $value.Price }}</td>
+        <td>{{ $value.CreatedAt }}</td>
+        <td>{{ $value.UpdatedAt }}</td>
+        <td><a href="/products/{{ $value.ID }}">🔎</a></td>
+        <td><a href="/products/{{ $value.ID }}/edit">✏️</a></td>
+        <td><a onclick="deleteProduct({{ $value.ID }})">🗑️</a></td>
+      </tr>
+    {{ end }}
+    </tbody>
+  </table>
+
+  <h2>💳 Payments 💳</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>ProductID</th>
+        <th>PricePaid</th>
+        <th>Created At</th>
+        <th>Updated At</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{ range $key, $value := .payments }}
+      <tr>
+        <td>{{ $value.ID }}</td>
+        <td>{{ $value.Product.ID }}</td>
+        <td>{{ $value.PricePaid }}</td>
+        <td>{{ $value.CreatedAt }}</td>
+        <td>{{ $value.UpdatedAt }}</td>
+        <td><a href="/payments/{{ $value.ID }}">🔎</a></td>
+        <td><a href="/payments/{{ $value.ID }}/edit">✏️</a></td>
+        <td><a onclick="deleteProduct({{ $value.ID }})">🗑️</a></td>
+      </tr>
+    {{ end }}
+    </tbody>
+  </table>
+  
+  <h2>🗿 Feed 🗿</h2>
+
+  <script src="static/index.js" type="text/javascript"></script>
+</body>
+
+</html>

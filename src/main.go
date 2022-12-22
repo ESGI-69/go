@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"go/src/handler"
 	"go/src/payment"
@@ -38,11 +39,15 @@ func main() {
 
 	router := gin.Default()
 
-	// https://gin-gonic.com/docs/examples/html-rendering/
-	router.LoadHTMLGlob("src/index.tmpl")
+	// Load the pages templates https://gin-gonic.com/docs/examples/html-rendering/
+	router.LoadHTMLGlob("src/templates/*")
+
+	// Add the static files
+	router.Static("static/", "./src/js")
 
 	// Create the api
 	api := router.Group("/api")
+	web := router.Group("/")
 
 	router.NoRoute(notFound)
 
@@ -64,11 +69,34 @@ func main() {
 	api.PATCH("/payments/:id", paymentHandler.Update)
 	api.DELETE("/payments/:id", paymentHandler.Delete)
 
-	web := router.Group("/")
-
 	web.GET("/", func(c *gin.Context) {
+		products, _ := productService.GetAll()
+		payments, _ := paymentService.GetAll()
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"title": "Home Page",
+			"products": products,
+			"payments": payments,
+		})
+	})
+
+	web.GET("/products/create", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "productCreation.tmpl", gin.H{})
+	})
+
+	web.GET("/products/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		idInt, _ := strconv.Atoi(id)
+		product, _ := productService.GetById(idInt)
+		c.HTML(http.StatusOK, "product.tmpl", gin.H{
+			"product": product,
+		})
+	})
+
+	web.GET("/payments/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		idInt, _ := strconv.Atoi(id)
+		payment, _ := paymentService.GetById(idInt)
+		c.HTML(http.StatusOK, "payment.tmpl", gin.H{
+			"payment": payment,
 		})
 	})
 
