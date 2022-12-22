@@ -23,7 +23,7 @@ func NewRepository(db *gorm.DB) *repository {
 }
 
 func (r *repository) Create(payment Payment) (Payment, error) {
-	err := r.db.Create(&payment).Error
+	err := r.db.Preload("Product").Create(&payment).Error
 	if err != nil {
 		return payment, err
 	}
@@ -32,7 +32,7 @@ func (r *repository) Create(payment Payment) (Payment, error) {
 
 func (r *repository) GetAll() ([]Payment, error) {
 	var payments []Payment
-	err := r.db.Find(&payments).Error
+	err := r.db.Preload("Product").Find(&payments).Error
 	if err != nil {
 		return payments, err
 	}
@@ -41,7 +41,7 @@ func (r *repository) GetAll() ([]Payment, error) {
 
 func (r *repository) GetById(id int) (Payment, error) {
 	var payment Payment
-	err := r.db.Where(&Payment{ID: id}).First(&payment).Error
+	err := r.db.Preload("Product").Where(&Payment{ID: id}).First(&payment).Error
 	if err != nil {
 		return payment, err
 	}
