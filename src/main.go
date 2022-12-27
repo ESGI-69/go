@@ -91,6 +91,13 @@ func main() {
 		})
 	})
 
+	web.GET("/payments/create", func(c *gin.Context) {
+		products, _ := productService.GetAll()
+		c.HTML(http.StatusOK, "paymentCreation.tmpl", gin.H{
+			"products": products,
+		})
+	})
+
 	web.GET("/payments/:id", func(c *gin.Context) {
 		id := c.Param("id")
 		idInt, _ := strconv.Atoi(id)
