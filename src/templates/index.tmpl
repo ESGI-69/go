@@ -63,6 +63,8 @@
 
   <h2>💳 Payments 💳</h2>
 
+  <a href="/payments/create" >📝 Create a new payment</a>
+
   <table>
     <thead>
       <tr>
@@ -83,7 +85,7 @@
         <td>{{ $value.UpdatedAt }}</td>
         <td><a href="/payments/{{ $value.ID }}">🔎</a></td>
         <td><a href="/payments/{{ $value.ID }}/edit">✏️</a></td>
-        <td><a onclick="deleteProduct({{ $value.ID }})">🗑️</a></td>
+        <td><a onclick="deletePayment({{ $value.ID }})">🗑️</a></td>
       </tr>
     {{ end }}
     </tbody>
@@ -91,7 +93,7 @@
   
   <h2>🗿 Feed 🗿</h2>
 
-  <script src="static/index.js" type="text/javascript"></script>
+  <script src="/static/index.js" type="text/javascript"></script>
 </body>
 
 </html>
