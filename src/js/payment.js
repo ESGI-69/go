@@ -18,7 +18,6 @@
 //     console.error(error)
 //   }
 // }
-
 function createPayment(event) {
   event.preventDefault();
   const paymentData = new FormData(document.getElementById('payment-form'))
@@ -31,6 +30,7 @@ function createPayment(event) {
   })
     .then(response => response.json())
     .then(data => {
+      console.log('Success:', data);
       window.location.href = '/';
     }
     )
@@ -39,6 +39,30 @@ function createPayment(event) {
     }
     );
 }
+
+function editPayment(event) {
+  event.preventDefault();
+  const paymentData = new FormData(document.getElementById('payment-form'))
+  console.log(`http://localhost:3000/api/payments/${paymentData.get('PaymentId')}`)
+  fetch(`http://localhost:3000/api/payments/${paymentData.get('PaymentId')}`, {
+    method: 'PATCH',
+    body: JSON.stringify({
+      PricePaid: parseFloat(paymentData.get('PricePaid')),
+      ProductId: parseInt(paymentData.get('ProductId')),
+    }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      // window.location.href = '/';
+    }
+    )
+    .catch((error) => {
+      console.error('Error:', error);
+    }
+    );
+}
+
 
 const deletePayment = async (paymentId) => {
   try {

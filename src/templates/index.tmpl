@@ -78,7 +78,7 @@
     </thead>
     <tbody>
     {{ range $key, $value := .payments }}
-      <tr>
+      <tr id="payment-{{ $value.ID }}">
         <td>{{ $value.ID }}</td>
         <td>{{ $value.Product.ID }}</td>
         <td>{{ $value.Product.Name }}</td>

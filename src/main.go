@@ -98,12 +98,23 @@ func main() {
 		})
 	})
 
-	web.GET("/payments/:id", func(c *gin.Context) {
+	// web.GET("/payments/:id", func(c *gin.Context) {
+	// 	id := c.Param("id")
+	// 	idInt, _ := strconv.Atoi(id)
+	// 	payment, _ := paymentService.GetById(idInt)
+	// 	c.HTML(http.StatusOK, "payment.tmpl", gin.H{
+	// 		"payment": payment,
+	// 	})
+	// })
+
+	web.GET("/payments/:id/edit", func(c *gin.Context) {
 		id := c.Param("id")
 		idInt, _ := strconv.Atoi(id)
 		payment, _ := paymentService.GetById(idInt)
-		c.HTML(http.StatusOK, "payment.tmpl", gin.H{
-			"payment": payment,
+		products, _ := productService.GetAll()
+		c.HTML(http.StatusOK, "paymentEdit.tmpl", gin.H{
+			"payment":  payment,
+			"products": products,
 		})
 	})
 
