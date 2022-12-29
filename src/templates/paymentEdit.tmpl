@@ -12,12 +12,12 @@
   <h2>💳 Payment Edition 💳</h2>
 
   <form id="payment-form" onsubmit="editPayment(event)">
-    <label for="ProductId">Product</label>
-    <select id="ProductId" name="ProductId">
+    <label for="ProductID">Product</label>
+    <select id="ProductID" name="ProductID">
       {{ range $key, $value := .products }}
       <option 
       value="{{ $value.ID }}"
-      {{ if eq $value.ID $.payment.ProductId }}
+      {{ if eq $value.ID $.payment.ProductID }}
         selected
       {{ end }}
       >

@@ -2,6 +2,7 @@ package payment
 
 import (
 	"errors"
+	Product "go/src/product"
 
 	"gorm.io/gorm"
 )
@@ -10,7 +11,7 @@ type Repository interface {
 	Create(payment Payment) (Payment, error)
 	GetAll() ([]Payment, error)
 	GetById(id int) (Payment, error)
-	Update(id int, inputPayment InputPayment) (Payment, error)
+	Update(id int, input InputPayment) (Payment, error)
 	Delete(id int) error
 }
 
@@ -48,14 +49,21 @@ func (r *repository) GetById(id int) (Payment, error) {
 	return payment, nil
 }
 
-func (r *repository) Update(id int, inputPayment InputPayment) (Payment, error) {
+func (r *repository) Update(id int, input InputPayment) (Payment, error) {
 	payment, err := r.GetById(id)
 	if err != nil {
 		return payment, err
 	}
-	payment.ProductId = inputPayment.ProductId
-	payment.PricePaid = inputPayment.PricePaid
-	err = r.db.Save(&payment).Error
+
+	var product Product.Product
+	err = r.db.Where(&Product.Product{ID: input.ProductID}).First(&product).Error
+	if err != nil {
+		return payment, err
+	}
+
+	payment.ProductID = input.ProductID
+	payment.PricePaid = input.PricePaid
+	err = r.db.Preload("Product").Save(&payment).Error
 	if err != nil {
 		return payment, err
 	}

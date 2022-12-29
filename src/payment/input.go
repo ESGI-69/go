@@ -1,6 +1,6 @@
 package payment
 
 type InputPayment struct {
-	ProductId int
+	ProductID int
 	PricePaid float64
 }
