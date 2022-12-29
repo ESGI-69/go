@@ -82,14 +82,23 @@ func main() {
 		c.HTML(http.StatusOK, "productCreation.tmpl", gin.H{})
 	})
 
-	web.GET("/products/:id", func(c *gin.Context) {
+	web.GET("/products/:id/edit", func(c *gin.Context) {
 		id := c.Param("id")
 		idInt, _ := strconv.Atoi(id)
 		product, _ := productService.GetById(idInt)
-		c.HTML(http.StatusOK, "product.tmpl", gin.H{
+		c.HTML(http.StatusOK, "productEdit.tmpl", gin.H{
 			"product": product,
 		})
 	})
+
+	// web.GET("/products/:id", func(c *gin.Context) {
+	// 	id := c.Param("id")
+	// 	idInt, _ := strconv.Atoi(id)
+	// 	product, _ := productService.GetById(idInt)
+	// 	c.HTML(http.StatusOK, "product.tmpl", gin.H{
+	// 		"product": product,
+	// 	})
+	// })
 
 	web.GET("/payments/create", func(c *gin.Context) {
 		products, _ := productService.GetAll()

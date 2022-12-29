@@ -43,7 +43,6 @@ function createPayment(event) {
 function editPayment(event) {
   event.preventDefault();
   const paymentData = new FormData(document.getElementById('payment-form'))
-  console.log(`http://localhost:3000/api/payments/${paymentData.get('PaymentId')}`)
   fetch(`http://localhost:3000/api/payments/${paymentData.get('PaymentId')}`, {
     method: 'PATCH',
     body: JSON.stringify({
