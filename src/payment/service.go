@@ -18,7 +18,7 @@ func NewService(repository Repository) *service {
 
 func (s *service) Create(input InputPayment) (Payment, error) {
 	var payment Payment
-	payment.ProductId = input.ProductId
+	payment.ProductID = input.ProductID
 	payment.PricePaid = input.PricePaid
 	payment, err := s.repository.Create(payment)
 	if err != nil {

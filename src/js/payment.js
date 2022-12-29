@@ -9,7 +9,7 @@
 //       },
 //       body: JSON.stringify({
 //         PricePaid: parseFloat(paymentData.get('PricePaid')),
-//         ProductId: parseInt(paymentData.get('ProductId')),
+//         ProductID: parseInt(paymentData.get('ProductID')),
 //       }),
 //     });
 //     await result.json();
@@ -25,7 +25,7 @@ function createPayment(event) {
     method: 'POST',
     body: JSON.stringify({
       PricePaid: parseFloat(paymentData.get('PricePaid')),
-      ProductId: parseInt(paymentData.get('ProductId')),
+      ProductID: parseInt(paymentData.get('ProductID')),
     }),
   })
     .then(response => response.json())
@@ -48,13 +48,13 @@ function editPayment(event) {
     method: 'PATCH',
     body: JSON.stringify({
       PricePaid: parseFloat(paymentData.get('PricePaid')),
-      ProductId: parseInt(paymentData.get('ProductId')),
+      ProductID: parseInt(paymentData.get('ProductID')),
     }),
   })
     .then(response => response.json())
     .then(data => {
       console.log('Success:', data);
-      // window.location.href = '/';
+      window.location.href = '/';
     }
     )
     .catch((error) => {

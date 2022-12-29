@@ -12,8 +12,8 @@
 
   <h2>💳 Payment Creation 💳</h2>
   <form id="payment-form" onsubmit="createPayment(event)">
-    <label for="ProductId">Product</label>
-    <select id="ProductId" name="ProductId">
+    <label for="ProductID">Product</label>
+    <select id="ProductID" name="ProductID">
       {{ range $key, $value := .products }}
       <option value="{{ $value.ID }}">{{ $value.Name }}</option>
       {{ end }}
