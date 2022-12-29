@@ -80,8 +80,20 @@
     {{ range $key, $value := .payments }}
       <tr id="payment-{{ $value.ID }}">
         <td>{{ $value.ID }}</td>
-        <td>{{ $value.Product.ID }}</td>
-        <td>{{ $value.Product.Name }}</td>
+        <td>
+          {{ if $value.ProductID }}
+            {{ $value.ProductID }}
+          {{ else }}
+            deleted
+          {{ end }}
+        </td>
+        <td>
+          {{ if $value.ProductID }}
+            {{ $value.Product.Name }}
+          {{ else }}
+            deleted
+          {{ end }}
+        </td>
         <td>{{ $value.PricePaid }}</td>
         <td>{{ $value.CreatedAt }}</td>
         <td>{{ $value.UpdatedAt }}</td>

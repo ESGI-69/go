@@ -1,3 +1,43 @@
+function createProduct(event){
+  event.preventDefault();
+  const productData = new FormData(document.getElementById('product-form'))
+  fetch('http://localhost:3000/api/products/', {
+    method: 'POST',
+    body: JSON.stringify({
+      Name: productData.get('Name'),
+      Price: parseFloat(productData.get('Price')),
+    }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      window.location.href = '/';
+    }
+    )
+}
+
+function editProduct(event){
+  event.preventDefault();
+  const productData = new FormData(document.getElementById('product-form'))
+  fetch(`http://localhost:3000/api/products/${productData.get('ProductID')}`, {
+    method: 'PATCH',
+    body: JSON.stringify({
+      Name: productData.get('Name'),
+      Price: parseFloat(productData.get('Price')),
+    }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      window.location.href = '/';
+    }
+    )
+    .catch((error) => {
+      console.error('Error:', error);
+    }
+    );
+}
+
 const deleteProduct = async (productId) => {
   try {
     const result = await fetch(`http://localhost:3000/api/products/${productId}`, {
