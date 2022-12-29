@@ -63,7 +63,9 @@ func (r *repository) Update(id int, input InputPayment) (Payment, error) {
 
 	payment.ProductID = input.ProductID
 	payment.PricePaid = input.PricePaid
-	err = r.db.Preload("Product").Save(&payment).Error
+	// err = r.db.Save(&payment).Error
+	err = r.db.Model(&payment).Updates(Payment{ProductID: input.ProductID, PricePaid: input.PricePaid}).Error
+
 	if err != nil {
 		return payment, err
 	}
