@@ -61,8 +61,8 @@ func (r *repository) Update(id int, input InputPayment) (Payment, error) {
 		return payment, err
 	}
 
-	payment.ProductID = input.ProductID
-	payment.PricePaid = input.PricePaid
+	// payment.ProductID = input.ProductID
+	// payment.PricePaid = input.PricePaid
 	// err = r.db.Save(&payment).Error
 	err = r.db.Model(&payment).Updates(Payment{ProductID: input.ProductID, PricePaid: input.PricePaid}).Error
 
