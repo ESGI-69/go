@@ -3,9 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
-	"strconv"
 
 	"go/src/handler"
 	"go/src/payment"
@@ -69,63 +67,15 @@ func main() {
 	api.PATCH("/payments/:id", paymentHandler.Update)
 	api.DELETE("/payments/:id", paymentHandler.Delete)
 
-	web.GET("/", func(c *gin.Context) {
-		products, _ := productService.GetAll()
-		payments, _ := paymentService.GetAll()
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"products": products,
-			"payments": payments,
-		})
-	})
+	products, _ := productService.GetAll()
+	payments, _ := paymentService.GetAll()
 
-	web.GET("/products/create", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "productCreation.tmpl", gin.H{})
-	})
-
-	web.GET("/products/:id/edit", func(c *gin.Context) {
-		id := c.Param("id")
-		idInt, _ := strconv.Atoi(id)
-		product, _ := productService.GetById(idInt)
-		c.HTML(http.StatusOK, "productEdit.tmpl", gin.H{
-			"product": product,
-		})
-	})
-
-	// web.GET("/products/:id", func(c *gin.Context) {
-	// 	id := c.Param("id")
-	// 	idInt, _ := strconv.Atoi(id)
-	// 	product, _ := productService.GetById(idInt)
-	// 	c.HTML(http.StatusOK, "product.tmpl", gin.H{
-	// 		"product": product,
-	// 	})
-	// })
-
-	web.GET("/payments/create", func(c *gin.Context) {
-		products, _ := productService.GetAll()
-		c.HTML(http.StatusOK, "paymentCreation.tmpl", gin.H{
-			"products": products,
-		})
-	})
-
-	// web.GET("/payments/:id", func(c *gin.Context) {
-	// 	id := c.Param("id")
-	// 	idInt, _ := strconv.Atoi(id)
-	// 	payment, _ := paymentService.GetById(idInt)
-	// 	c.HTML(http.StatusOK, "payment.tmpl", gin.H{
-	// 		"payment": payment,
-	// 	})
-	// })
-
-	web.GET("/payments/:id/edit", func(c *gin.Context) {
-		id := c.Param("id")
-		idInt, _ := strconv.Atoi(id)
-		payment, _ := paymentService.GetById(idInt)
-		products, _ := productService.GetAll()
-		c.HTML(http.StatusOK, "paymentEdit.tmpl", gin.H{
-			"payment":  payment,
-			"products": products,
-		})
-	})
+	webHandler := handler.NewWebHandler()
+	web.GET("/", webHandler.Home(products, payments))
+	web.GET("/products/create", webHandler.CreateProduct())
+	web.GET("/payments/create", webHandler.CreatePayment(products))
+	web.GET("/products/:id/edit", webHandler.EditProduct(productService))
+	web.GET("/payments/:id/edit", webHandler.EditPayment(paymentService, productService))
 
 	router.Run()
 }
