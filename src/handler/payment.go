@@ -28,6 +28,16 @@ func NewPaymentHandler(paymentService payment.Service, broadcaster broadcaster.B
 	}
 }
 
+// CreatePayment creates a new payment
+// @Summary Create a new payment
+// @Description Creates a new payment and returns the created payment
+// @Tags payments
+// @Accept  json
+// @Produce  json
+// @Param payment body payment.InputPayment true "Payment information"
+// @Success 201 {object} payment.Payment "The created payment"
+// @Failure 400 {object} error "Invalid payment input"
+// @Router /payments [post]
 func (ph *paymentHandler) Create(c *gin.Context) {
 	var input payment.InputPayment
 	err := c.ShouldBindJSON(&input)

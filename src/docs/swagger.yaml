@@ -1,0 +1,80 @@
+basePath: /api/v1
+definitions:
+  payment.InputPayment:
+    properties:
+      pricePaid:
+        type: number
+      productID:
+        type: integer
+    type: object
+  payment.Payment:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      pricePaid:
+        type: number
+      product:
+        $ref: '#/definitions/product.Product'
+      productID:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  product.Product:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      updatedAt:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /payments:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new payment and returns the created payment
+      parameters:
+      - description: Payment information
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/payment.InputPayment'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: The created payment
+          schema:
+            $ref: '#/definitions/payment.Payment'
+        "400":
+          description: Invalid payment input
+          schema: {}
+      summary: Create a new payment
+      tags:
+      - payments
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
