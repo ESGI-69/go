@@ -67,10 +67,7 @@ func main() {
 	api.PATCH("/payments/:id", paymentHandler.Update)
 	api.DELETE("/payments/:id", paymentHandler.Delete)
 
-	products, _ := productService.GetAll()
-	payments, _ := paymentService.GetAll()
-
-	webHandler := handler.NewWebHandler(productService, paymentService, products, payments)
+	webHandler := handler.NewWebHandler(productService, paymentService)
 	web.GET("/", webHandler.Home)
 	web.GET("/products/create", webHandler.CreateProduct)
 	web.GET("/payments/create", webHandler.CreatePayment)
