@@ -70,12 +70,12 @@ func main() {
 	products, _ := productService.GetAll()
 	payments, _ := paymentService.GetAll()
 
-	webHandler := handler.NewWebHandler()
-	web.GET("/", webHandler.Home(products, payments))
-	web.GET("/products/create", webHandler.CreateProduct())
-	web.GET("/payments/create", webHandler.CreatePayment(products))
-	web.GET("/products/:id/edit", webHandler.EditProduct(productService))
-	web.GET("/payments/:id/edit", webHandler.EditPayment(paymentService, productService))
+	webHandler := handler.NewWebHandler(productService, paymentService, products, payments)
+	web.GET("/", webHandler.Home)
+	web.GET("/products/create", webHandler.CreateProduct)
+	web.GET("/payments/create", webHandler.CreatePayment)
+	web.GET("/products/:id/edit", webHandler.EditProduct)
+	web.GET("/payments/:id/edit", webHandler.EditPayment)
 
 	router.Run()
 }
