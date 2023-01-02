@@ -12,23 +12,21 @@ import (
 type webHandler struct {
 	productService product.Service
 	paymentService payment.Service
-	products       []product.Product
-	payments       []payment.Payment
 }
 
-func NewWebHandler(productService product.Service, paymentService payment.Service, products []product.Product, payments []payment.Payment) *webHandler {
+func NewWebHandler(productService product.Service, paymentService payment.Service) *webHandler {
 	return &webHandler{
 		productService: productService,
 		paymentService: paymentService,
-		products:       products,
-		payments:       payments,
 	}
 }
 
 func (webHandler *webHandler) Home(c *gin.Context) {
+	products, _ := webHandler.productService.GetAll()
+	payments, _ := webHandler.paymentService.GetAll()
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{
-		"products": webHandler.products,
-		"payments": webHandler.payments,
+		"products": products,
+		"payments": payments,
 	})
 }
 
@@ -37,13 +35,13 @@ func (webHandler *webHandler) CreateProduct(c *gin.Context) {
 }
 
 func (webHandler *webHandler) CreatePayment(c *gin.Context) {
+	products, _ := webHandler.productService.GetAll()
 	c.HTML(http.StatusOK, "paymentCreation.tmpl", gin.H{
-		"products": webHandler.products,
+		"products": products,
 	})
 }
 
 func (webHandler *webHandler) EditProduct(c *gin.Context) {
-
 	id := c.Param("id")
 	idInt, _ := strconv.Atoi(id)
 	product, _ := webHandler.productService.GetById(idInt)
