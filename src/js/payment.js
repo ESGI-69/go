@@ -2,7 +2,7 @@
 //   event.preventDefault();
 //   const paymentData = new FormData(document.getElementById('payment-form'))
 //   try {
-//     const result = await fetch('http://localhost:3000/api/payments', {
+//     const result = await fetch('http://localhost:3000/api/v1/payments', {
 //       method: 'POST',
 //       headers: {
 //         'Content-Type': 'application/json',
@@ -21,7 +21,7 @@
 function createPayment(event) {
   event.preventDefault();
   const paymentData = new FormData(document.getElementById('payment-form'))
-  fetch('http://localhost:3000/api/payments/', {
+  fetch('http://localhost:3000/api/v1/payments/', {
     method: 'POST',
     body: JSON.stringify({
       PricePaid: parseFloat(paymentData.get('PricePaid')),
@@ -43,7 +43,7 @@ function createPayment(event) {
 function editPayment(event) {
   event.preventDefault();
   const paymentData = new FormData(document.getElementById('payment-form'))
-  fetch(`http://localhost:3000/api/payments/${paymentData.get('PaymentId')}`, {
+  fetch(`http://localhost:3000/api/v1/payments/${paymentData.get('PaymentId')}`, {
     method: 'PATCH',
     body: JSON.stringify({
       PricePaid: parseFloat(paymentData.get('PricePaid')),
@@ -65,7 +65,7 @@ function editPayment(event) {
 
 const deletePayment = async (paymentId) => {
   try {
-    const result = await fetch(`http://localhost:3000/api/payments/${paymentId}`, {
+    const result = await fetch(`http://localhost:3000/api/v1/payments/${paymentId}`, {
       method: 'DELETE'
     });
     await result.json();

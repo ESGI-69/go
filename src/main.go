@@ -13,6 +13,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // 404 custom
@@ -22,6 +25,22 @@ func notFound(context *gin.Context) {
 	})
 }
 
+// @title           Swagger Example API
+// @version         1.0
+// @description     This is a sample server celler server.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.url    http://www.swagger.io/support
+// @contact.email  support@swagger.io
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:3000
+// @BasePath  /api/v1
+
+// @securityDefinitions.basic  BasicAuth
 func main() {
 	// Connection DB
 	dbURL := os.Getenv("DB_USER") + ":" + os.Getenv("DB_PASSWORD") + "@tcp(" + os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT") + ")/" + os.Getenv("DB_NAME") + "?charset=utf8mb4&parseTime=True&loc=Local"
@@ -48,36 +67,47 @@ func main() {
 	broadcaster := broadcaster.NewBroadcaster(10)
 
 	// Create the api
-	api := router.Group("/api")
-	web := router.Group("/")
-
-	router.NoRoute(notFound)
-
 	productRepository := product.NewRepository(db)
 	productService := product.NewService(productRepository)
 	productHandler := handler.NewProductHandler(productService)
-	api.GET("/products", productHandler.GetAll)
-	api.GET("/products/:id", productHandler.GetByID)
-	api.POST("/products", productHandler.Create)
-	api.PATCH("/products/:id", productHandler.Update)
-	api.DELETE("/products/:id", productHandler.Delete)
-
 	paymentRepository := payment.NewRepository(db)
 	paymentService := payment.NewService(paymentRepository)
 	paymentHandler := handler.NewPaymentHandler(paymentService, broadcaster)
-	api.POST("/payments", paymentHandler.Create)
-	api.GET("/payments", paymentHandler.GetAll)
-	api.GET("/payments/sse", paymentHandler.Sse)
-	api.GET("/payments/:id", paymentHandler.GetById)
-	api.PATCH("/payments/:id", paymentHandler.Update)
-	api.DELETE("/payments/:id", paymentHandler.Delete)
+	api := router.Group("/api/v1")
+	{
+		payments := api.Group("/payments")
+		{
+			payments.POST("/", paymentHandler.Create)
+			payments.GET("/", paymentHandler.GetAll)
+			payments.GET("/sse", paymentHandler.Sse)
+			payments.GET("/:id", paymentHandler.GetById)
+			payments.PATCH("/:id", paymentHandler.Update)
+			payments.DELETE("/:id", paymentHandler.Delete)
+		}
+		products := api.Group("/products")
+		{
+			products.POST("/", productHandler.Create)
+			products.GET("/", productHandler.GetAll)
+			products.GET("/:id", productHandler.GetByID)
+			products.PATCH("/:id", productHandler.Update)
+			products.DELETE("/:id", productHandler.Delete)
+		}
+	}
 
+	// Create Web
+	web := router.Group("/")
 	webHandler := handler.NewWebHandler(productService, paymentService, broadcaster)
 	web.GET("/", webHandler.Home)
 	web.GET("/products/create", webHandler.CreateProduct)
 	web.GET("/payments/create", webHandler.CreatePayment)
 	web.GET("/products/:id/edit", webHandler.EditProduct)
 	web.GET("/payments/:id/edit", webHandler.EditPayment)
+
+	// Create 404
+	router.NoRoute(notFound)
+
+	// Call swagger middleware
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.Run()
 
