@@ -163,7 +163,6 @@ func (ph *paymentHandler) Delete(c *gin.Context) {
 	})
 }
 
-// Conect the brodcaster to the /sse endpoint
 func (ph *paymentHandler) Sse(c *gin.Context) {
 	channel := make(chan interface{})
 	ph.broadcaster.Register(channel)
@@ -172,7 +171,8 @@ func (ph *paymentHandler) Sse(c *gin.Context) {
 		for {
 			select {
 			case payment := <-channel:
-				c.SSEvent("payment", payment)
+				c.SSEvent("message", payment)
+				return true
 			}
 		}
 	})
