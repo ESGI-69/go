@@ -1,5 +1,21 @@
-basePath: /api/v1
+basePath: /api
 definitions:
+  handler.PaymentResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  handler.ProductResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
   payment.InputPayment:
     properties:
       pricePaid:
@@ -21,6 +37,13 @@ definitions:
         type: integer
       updatedAt:
         type: string
+    type: object
+  product.InputProduct:
+    properties:
+      name:
+        type: string
+      price:
+        type: number
     type: object
   product.Product:
     properties:
@@ -50,6 +73,32 @@ info:
   version: "1.0"
 paths:
   /payments:
+    get:
+      consumes:
+      - application/json
+      description: Get all payments
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payment.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+      summary: Get all payments
+      tags:
+      - payments
     post:
       consumes:
       - application/json
@@ -64,16 +113,291 @@ paths:
       produces:
       - application/json
       responses:
-        "201":
-          description: The created payment
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/payment.Payment'
         "400":
-          description: Invalid payment input
-          schema: {}
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
       summary: Create a new payment
       tags:
       - payments
+  /payments/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a payment
+      parameters:
+      - description: Payment id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+      summary: Delete a payment
+      tags:
+      - payments
+    get:
+      consumes:
+      - application/json
+      description: Get payment by id
+      parameters:
+      - description: Payment id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payment.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+      summary: Get payment by id
+      tags:
+      - payments
+    patch:
+      consumes:
+      - application/json
+      description: Updates a payment and returns the updated payment
+      parameters:
+      - description: Payment id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Payment information
+        in: body
+        name: payment
+        required: true
+        schema:
+          $ref: '#/definitions/payment.InputPayment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payment.Payment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.PaymentResponse'
+      summary: Update a payment
+      tags:
+      - payments
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Returns all products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/product.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+      summary: Get all products
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: Creates a new product
+      parameters:
+      - description: Product information
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/product.InputProduct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/product.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+      summary: Create a new product
+      tags:
+      - products
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/product.InputProduct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/product.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+      summary: Delete a product
+      tags:
+      - products
+    get:
+      consumes:
+      - application/json
+      description: Returns a product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/product.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+      summary: Get a product by ID
+      tags:
+      - products
+    patch:
+      consumes:
+      - application/json
+      description: Updates a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/product.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ProductResponse'
+      summary: Update a product
+      tags:
+      - products
 securityDefinitions:
   BasicAuth:
     type: basic

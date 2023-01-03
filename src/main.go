@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"go/src/broadcaster"
+	_ "go/src/docs"
 	"go/src/handler"
 	"go/src/payment"
 	"go/src/product"
@@ -38,7 +39,7 @@ func notFound(context *gin.Context) {
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host      localhost:3000
-// @BasePath  /api/v1
+// @BasePath  /api
 
 // @securityDefinitions.basic  BasicAuth
 func main() {
@@ -73,7 +74,7 @@ func main() {
 	paymentRepository := payment.NewRepository(db)
 	paymentService := payment.NewService(paymentRepository)
 	paymentHandler := handler.NewPaymentHandler(paymentService, broadcaster)
-	api := router.Group("/api/v1")
+	api := router.Group("/api")
 	{
 		payments := api.Group("/payments")
 		{

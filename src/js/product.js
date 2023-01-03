@@ -1,7 +1,7 @@
 function createProduct(event){
   event.preventDefault();
   const productData = new FormData(document.getElementById('product-form'))
-  fetch('http://localhost:3000/api/v1/products/', {
+  fetch('http://localhost:3000/api/products/', {
     method: 'POST',
     body: JSON.stringify({
       Name: productData.get('Name'),
@@ -19,7 +19,7 @@ function createProduct(event){
 function editProduct(event){
   event.preventDefault();
   const productData = new FormData(document.getElementById('product-form'))
-  fetch(`http://localhost:3000/api/v1/products/${productData.get('ProductID')}`, {
+  fetch(`http://localhost:3000/api/products/${productData.get('ProductID')}`, {
     method: 'PATCH',
     body: JSON.stringify({
       Name: productData.get('Name'),
@@ -40,7 +40,7 @@ function editProduct(event){
 
 const deleteProduct = async (productId) => {
   try {
-    const result = await fetch(`http://localhost:3000/api/v1/products/${productId}`, {
+    const result = await fetch(`http://localhost:3000/api/products/${productId}`, {
       method: 'DELETE'
     });
     await result.json();
