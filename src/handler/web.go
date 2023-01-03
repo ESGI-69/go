@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"go/src/broadcaster"
 	"go/src/payment"
 	"go/src/product"
 	"net/http"
@@ -12,12 +13,14 @@ import (
 type webHandler struct {
 	productService product.Service
 	paymentService payment.Service
+	broadcaster    broadcaster.Broadcaster
 }
 
-func NewWebHandler(productService product.Service, paymentService payment.Service) *webHandler {
+func NewWebHandler(productService product.Service, paymentService payment.Service, broadcaster broadcaster.Broadcaster) *webHandler {
 	return &webHandler{
 		productService: productService,
 		paymentService: paymentService,
+		broadcaster:    broadcaster,
 	}
 }
 

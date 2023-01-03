@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"go/src/broadcaster"
 	"go/src/payment"
+	"io"
 	"net/http"
 	"strconv"
 
@@ -16,10 +18,14 @@ type PaymentResponse struct {
 
 type paymentHandler struct {
 	paymentService payment.Service
+	broadcaster    broadcaster.Broadcaster
 }
 
-func NewPaymentHandler(paymentService payment.Service) *paymentHandler {
-	return &paymentHandler{paymentService}
+func NewPaymentHandler(paymentService payment.Service, broadcaster broadcaster.Broadcaster) *paymentHandler {
+	return &paymentHandler{
+		paymentService,
+		broadcaster,
+	}
 }
 
 func (ph *paymentHandler) Create(c *gin.Context) {
@@ -48,6 +54,7 @@ func (ph *paymentHandler) Create(c *gin.Context) {
 		Message: "Payment created",
 		Data:    payment,
 	})
+	ph.broadcaster.Submit(payment)
 }
 
 func (ph *paymentHandler) GetAll(c *gin.Context) {
@@ -153,5 +160,20 @@ func (ph *paymentHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, PaymentResponse{
 		Success: true,
 		Message: "Payment deleted",
+	})
+}
+
+// Conect the brodcaster to the /sse endpoint
+func (ph *paymentHandler) Sse(c *gin.Context) {
+	channel := make(chan interface{})
+	ph.broadcaster.Register(channel)
+	defer ph.broadcaster.Unregister(channel)
+	c.Stream(func(w io.Writer) bool {
+		for {
+			select {
+			case payment := <-channel:
+				c.SSEvent("payment", payment)
+			}
+		}
 	})
 }

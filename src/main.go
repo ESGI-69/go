@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"go/src/broadcaster"
 	"go/src/handler"
 	"go/src/payment"
 	"go/src/product"
@@ -43,6 +44,9 @@ func main() {
 	// Add the static files
 	router.Static("static/", "./src/js")
 
+	// Create the broadcaster
+	broadcaster := broadcaster.NewBroadcaster(10)
+
 	// Create the api
 	api := router.Group("/api")
 	web := router.Group("/")
@@ -60,14 +64,15 @@ func main() {
 
 	paymentRepository := payment.NewRepository(db)
 	paymentService := payment.NewService(paymentRepository)
-	paymentHandler := handler.NewPaymentHandler(paymentService)
+	paymentHandler := handler.NewPaymentHandler(paymentService, broadcaster)
 	api.POST("/payments", paymentHandler.Create)
 	api.GET("/payments", paymentHandler.GetAll)
+	api.GET("/payments/sse", paymentHandler.Sse)
 	api.GET("/payments/:id", paymentHandler.GetById)
 	api.PATCH("/payments/:id", paymentHandler.Update)
 	api.DELETE("/payments/:id", paymentHandler.Delete)
 
-	webHandler := handler.NewWebHandler(productService, paymentService)
+	webHandler := handler.NewWebHandler(productService, paymentService, broadcaster)
 	web.GET("/", webHandler.Home)
 	web.GET("/products/create", webHandler.CreateProduct)
 	web.GET("/payments/create", webHandler.CreatePayment)
