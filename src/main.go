@@ -75,4 +75,6 @@ func main() {
 	web.GET("/payments/:id/edit", webHandler.EditPayment)
 
 	router.Run()
+
+	fmt.Println("🚀 Server running on port 3000 🚀")
 }
