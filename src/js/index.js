@@ -1,6 +1,6 @@
 const deleteProduct = async (productId) => {
   try {
-    const result = await fetch(`http://localhost:3000/api/v1/products/${productId}`, {
+    const result = await fetch(`http://localhost:3000/api/products/${productId}`, {
       method: 'DELETE'
     });
     await result.json();
@@ -12,7 +12,7 @@ const deleteProduct = async (productId) => {
 
 const deletePayment = async (paymentId) => {
   try {
-    const result = await fetch(`http://localhost:3000/api/v1/payments/${paymentId}`, {
+    const result = await fetch(`http://localhost:3000/api/payments/${paymentId}`, {
       method: 'DELETE'
     });
     await result.json();
