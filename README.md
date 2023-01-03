@@ -5,21 +5,23 @@
 ### Builder l'image docker
 
 ```bash
-docker build .
+docker-compose build .
 ```
 
 ### Lancer le docker compose
 
 ```bash
-docker-compose up -d
+docker-compose up
 ```
 
-### Lancer le go en dehors du docker
+Cela va lancer le serveur sur le port 3000 et générer les fichier de documentation API.
 
-Pour ça il faut commenter le service web dans le docker-compose.yml
+Ça permet de ne pas push les fichier de documentation API sur le repo pour ne pas avoir de conflit. 
 
-Une fois ça fait il faut lancer le go avec la commande suivante (il faut bien s'assurer que le docker compose est bien lancé) :
+## Utilisation
 
-```bash
-PORT=3000 DB_HOST=localhost DB_PORT=3306 DB_USER=test DB_PASSWORD=test DB_NAME=go-project go run src/main.go
-```
+Rendez-vous sur l'adresse http://localhost:3000
+
+## API Documentation
+
+Reendez-vous sur l'adresse http://localhost:3000/swagger/index.html
