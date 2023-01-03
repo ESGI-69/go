@@ -24,7 +24,12 @@ func NewRepository(db *gorm.DB) *repository {
 }
 
 func (r *repository) Create(payment Payment) (Payment, error) {
-	err := r.db.Preload("Product").Create(&payment).Error
+	err := r.db.Where("id = ?", payment.ProductID).First(&payment.Product).Error
+	if err != nil {
+		return payment, err
+	}
+
+	err = r.db.Create(&payment).Error
 	if err != nil {
 		return payment, err
 	}
