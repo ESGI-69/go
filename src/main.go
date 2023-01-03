@@ -26,9 +26,9 @@ func notFound(context *gin.Context) {
 	})
 }
 
-// @title           Swagger Example API
+// @title           Product Management API
 // @version         1.0
-// @description     This is a sample server celler server.
+// @description     This is server for products management.
 // @termsOfService  http://swagger.io/terms/
 
 // @contact.name   API Support
